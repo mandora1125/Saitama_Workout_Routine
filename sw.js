@@ -1,4 +1,4 @@
-const CACHE = 'saitama-pwa-shell-v1';
+const CACHE = 'saitama-pwa-shell-v2';
 const SHELL = [
   './',
   './index.html',
@@ -11,7 +11,9 @@ const SHELL = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(cache => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -30,13 +32,21 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // PWA 화면/정적 파일은 캐시를 먼저 사용해 즉시 표시하고,
+  // 최신 파일은 백그라운드에서 캐시에 갱신합니다.
   event.respondWith(
-    fetch(request)
-      .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE).then(cache => cache.put(request, copy)).catch(() => {});
+    caches.match(request).then(cached => {
+      const networkUpdate = fetch(request).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(request, copy)).catch(() => {});
+        }
         return response;
-      })
-      .catch(() => caches.match(request).then(response => response || caches.match('./index.html')))
+      }).catch(() => null);
+
+      return cached || networkUpdate.then(response =>
+        response || caches.match('./index.html')
+      );
+    })
   );
 });

@@ -167,26 +167,48 @@
     }catch(_){ }
   }
 
+  const DATA_CACHE_KEY='saitama-pwa-data-v2';
+
+  function loadCachedData(){
+    try{
+      const cached=localStorage.getItem(DATA_CACHE_KEY);
+      if(!cached)return false;
+      const parsed=JSON.parse(cached);
+      if(!parsed || !Array.isArray(parsed.workouts))return false;
+      data=parsed;
+      renderAll();
+      return true;
+    }catch(_){
+      return false;
+    }
+  }
+
+  async function refreshData(){
+    try{
+      const fresh=await api('getInitialData');
+      data=fresh;
+      try{localStorage.setItem(DATA_CACHE_KEY,JSON.stringify(fresh));}catch(_){ }
+      renderAll();
+      return true;
+    }catch(error){
+      return false;
+    }
+  }
+
   async function load(){
     if(loading)return;
     loading=true;
 
+    // 캐시가 있으면 먼저 즉시 화면을 그립니다.
+    // 그동안 Apps Script/Google Sheets 최신 데이터를 백그라운드에서 갱신합니다.
+    const hadCache=loadCachedData();
+
     try{
-      data=await api('getInitialData');
-      try{localStorage.setItem('saitama-pwa-data-v1',JSON.stringify(data));}catch(_){ }
-      renderAll();
-    }catch(error){
-      try{
-        const cached=localStorage.getItem('saitama-pwa-data-v1');
-        if(cached){
-          data=JSON.parse(cached);
-          renderAll();
-          toast('인터넷 연결이 없어 마지막으로 불러온 기록을 표시했어요.');
-        }else{
-          toast(error.message);
-        }
-      }catch(_){
-        toast(error.message);
+      const refreshed=await refreshData();
+      if(!refreshed && !hadCache){
+        toast('서버에서 기록을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');
+      }else if(!refreshed && hadCache){
+        toast('최신 기록을 불러오지 못해 마지막 캐시를 표시하고 있어요.');
       }
     }finally{
       loading=false;
