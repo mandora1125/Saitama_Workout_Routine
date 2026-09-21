@@ -40,6 +40,8 @@
   let compareExercise=exercises[0];
   let data={workouts:[],summary:null,settings:null};
   let selected=new Set(exercises);
+  // 종목을 빼거나 다시 추가해도 사용자가 입력한 횟수/세트/거리를 유지합니다.
+  let recordInputs=Object.fromEntries(exercises.map(name=>[name,{reps:name==='달리기'?1:20,sets:1}]));
   let loading=false;
   let saving=false;
 
@@ -206,22 +208,35 @@
     return totals;
   }
 
+  function captureRecordInputs(){
+    document.querySelectorAll('#entries input[data-name]').forEach(input=>{
+      const name=input.dataset.name;
+      if(!recordInputs[name])recordInputs[name]={reps:name==='달리기'?1:20,sets:1};
+      if(input.dataset.key==='reps')recordInputs[name].reps=input.value;
+      if(input.dataset.key==='sets')recordInputs[name].sets=input.value;
+    });
+  }
+
   function renderRecord(){
     const today=dateKey(byId('performedAt').value||localInput());
     const totals=dayTotals(today);
+
+    // 현재 입력값을 먼저 보존한 뒤 화면을 다시 그립니다.
+    captureRecordInputs();
 
     byId('chips').innerHTML=exercises.map(name=>`<button class="chip ${selected.has(name)?'on':''}" data-exercise="${esc(name)}">${selected.has(name)?'✓ ':''}${esc(name)}</button>`).join('');
 
     byId('entries').innerHTML=exercises.filter(name=>selected.has(name)).map(name=>{
       const running=name==='달리기';
-      const reps=running?1:20;
-      const sets=1;
-      const initialAmount=running?reps:reps*sets;
+      const saved=recordInputs[name]||{reps:running?1:20,sets:1};
+      const reps=Number(saved.reps)||0;
+      const sets=running?1:(Number(saved.sets)||0);
+      const initialAmount=reps*sets;
       return `<article class="entry">
         <div class="entry-top"><span>${esc(name)}</span><b>목표 ${goal(name)}${unit(name)}</b></div>
         <div class="fields ${running?'run':''}">
-          <label>${running?'거리':'횟수'}<input data-name="${esc(name)}" data-key="reps" type="number" min="1" step="${running?'0.1':'1'}" value="${reps}"></label>
-          ${running?'':`<label>세트 수<input data-name="${esc(name)}" data-key="sets" type="number" min="1" step="1" value="${sets}"></label>`}
+          <label>${running?'거리':'횟수'}<input data-name="${esc(name)}" data-key="reps" type="number" min="1" step="${running?'0.1':'1'}" value="${esc(saved.reps)}"></label>
+          ${running?'':`<label>세트 수<input data-name="${esc(name)}" data-key="sets" type="number" min="1" step="1" value="${esc(saved.sets)}"></label>`}
         </div>
         <p class="remaining">오늘 누적 ${totals[name]}${unit(name)} · 이번 기록 후 <b data-left="${esc(name)}">${Math.max(0,goal(name)-totals[name]-initialAmount)}${unit(name)} 남음</b></p>
       </article>`;
@@ -229,6 +244,8 @@
 
     document.querySelectorAll('#chips button').forEach(button=>button.onclick=()=>{
       if(saving) return;
+      // 종목을 추가/제거하기 전에 현재 입력값을 저장합니다.
+      captureRecordInputs();
       const name=button.dataset.exercise;
       if(selected.has(name)){
         if(selected.size===1)return toast('운동 종목을 하나 이상 선택해 주세요.');
@@ -239,7 +256,15 @@
       renderRecord();
     });
 
-    document.querySelectorAll('#entries input').forEach(input=>input.oninput=updateRemaining);
+    document.querySelectorAll('#entries input').forEach(input=>{
+      input.oninput=()=>{
+        const name=input.dataset.name;
+        if(!recordInputs[name])recordInputs[name]={reps:name==='달리기'?1:20,sets:1};
+        if(input.dataset.key==='reps')recordInputs[name].reps=input.value;
+        if(input.dataset.key==='sets')recordInputs[name].sets=input.value;
+        updateRemaining();
+      };
+    });
   }
 
   function updateRemaining(){
