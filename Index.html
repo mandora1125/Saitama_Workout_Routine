@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>사이타마 운동법</title>
+  <meta name="theme-color" content="#111410">
+  <meta name="description" content="사이타마 운동법 운동 기록 PWA">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <style>
+    :root{--lime:#829a42;--bg:#111410;--surface:#1b2019;--text:#edf0e7;--muted:#9ba397;--line:#313a2e;--red:#d37b72;--r:18px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#26321b 0,transparent 35%),var(--bg);color:var(--text)}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}button:focus-visible,input:focus-visible{outline:3px solid var(--lime);outline-offset:2px}.app{max-width:760px;margin:auto;padding:18px 16px calc(180px + env(safe-area-inset-bottom))}.top{display:flex;justify-content:space-between;align-items:center;padding:8px 0 22px}.brand{font-weight:900;font-size:20px;letter-spacing:-.8px}.online{color:var(--muted);font-size:12px}.online:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:6px}.page{display:none;gap:16px}.page.active{display:grid}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:0 12px 32px #0003}.eyebrow{margin:0 0 7px;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:1.1px}.title{margin:0;font-size:32px;letter-spacing:-1.7px}.hint{color:var(--muted);font-size:14px;line-height:1.55}.hero{background:var(--lime);color:#11170e;display:flex;justify-content:space-between;align-items:center;min-height:150px}.hero .eyebrow{color:#445026}.hero strong{font-size:58px;line-height:.8;letter-spacing:-4px}.hero strong small{font-size:20px;letter-spacing:-1px}.ring{height:78px;width:78px;border:7px solid #11170e55;border-top-color:#11170e;border-radius:50%;display:grid;place-items:center;font-weight:900}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}.day{padding:10px 2px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:11px;font-size:11px;font-weight:800}.day b{display:block;font-size:10px;margin-top:5px}.day.done{background:var(--lime);border-color:var(--lime);color:#10150e}.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{border:1px solid var(--line);border-radius:13px;padding:13px}.metric span{display:block;color:var(--muted);font-size:12px}.metric b{display:block;margin:6px 0;color:var(--lime);font-size:23px}.primary,.secondary,.danger{border:0;border-radius:12px;padding:13px 15px;font-weight:900}.primary{background:var(--lime);color:#0f160c}.secondary{color:var(--text);background:#ffffff12}.danger{color:var(--red);background:transparent;padding:7px}.wide{width:100%}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;position:fixed;z-index:2;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(94vw,600px);padding:7px;background:#151914ee;border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(12px)}.tabs button{border:0;border-radius:10px;background:transparent;color:var(--muted);padding:8px 2px;font-size:11px;font-weight:800}.tabs button.active{background:#ffffff12;color:var(--lime)}.chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:14px}.chip{min-width:0;padding:10px 1px;white-space:nowrap;overflow:hidden;text-overflow:clip;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text);font-size:12px;font-weight:800}.chip.on{background:var(--lime);border-color:var(--lime);color:#11170e}.entries{display:grid;gap:10px;margin-top:14px}.entry{border:1px solid var(--line);border-radius:14px;padding:14px}.entry-top{display:flex;justify-content:space-between;align-items:center;font-weight:900}.entry-top b{color:var(--lime)}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.fields.run{grid-template-columns:1fr}.fields label,.date-label{display:grid;gap:6px;color:var(--muted);font-size:12px;font-weight:800}.fields input,.date-label input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:#0e110e;color:var(--text)}.remaining{margin:12px 0 0;color:var(--muted);font-size:12px}.remaining b{color:var(--lime)}.session{display:flex;justify-content:space-between;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}.session:last-child{border:0}.session b,.session span{display:block}.session span{color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}.session-actions{display:flex;align-items:flex-start;gap:2px}.empty{padding:32px 0;text-align:center;color:var(--muted)}.compare{display:grid;gap:10px}.compare-card{border:1px solid var(--line);border-radius:13px;padding:14px}.compare-card h3{margin:0;font-size:16px}.compare-card p{margin:8px 0 0;color:var(--muted);font-size:13px}.compare-card b{font-size:26px;color:var(--lime)}.toast{position:fixed;z-index:5;top:14px;left:50%;transform:translateX(-50%);width:min(90vw,470px);padding:13px 15px;border-radius:12px;background:var(--lime);color:#10150e;font-weight:900;box-shadow:0 12px 30px #0007}.loading{padding:80px 0;text-align:center;color:var(--muted)}@media(min-width:640px){.app{padding-top:28px}.grid4{grid-template-columns:repeat(4,1fr)}.entries{grid-template-columns:repeat(2,1fr)} }
+  
+.status-week{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:6px}.status-week h2{margin:0;font-size:20px;letter-spacing:-.6px}.week-start{color:var(--muted);font-size:12px;white-space:nowrap}.day{min-height:118px;padding:14px 6px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:12px;font-size:14px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}.day .day-date{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap}.day .day-label{font-size:15px;color:var(--text);white-space:nowrap}.day b{font-size:9px;font-weight:600;white-space:nowrap;line-height:1}.day.done{background:var(--surface);border-color:var(--lime);color:var(--text)}.day.done .day-date,.day.done .day-label{color:var(--text)}.day.selected{border-color:#c39a3c;box-shadow:inset 0 0 0 1px #c39a3c}.day.today:not(.selected){border-color:#657d35}.compare-select{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}.compare-select-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.compare-select-title{margin:0;font-size:18px}.compare-period{color:var(--muted);font-size:12px;white-space:nowrap}.compare-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.compare-chip{border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text);padding:9px 13px;font-weight:800;font-size:13px}.compare-chip.on{background:var(--lime);border-color:var(--lime);color:#11170e}.compare-detail{margin-top:18px}.compare-empty{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}.compare-empty p{margin:0;color:var(--muted);font-size:14px}.compare-start{display:inline-block;margin-top:10px;color:var(--lime);font-weight:900;text-decoration:none}.compare-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.compare-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}.compare-stat span{display:block;color:var(--muted);font-size:12px}.compare-stat b{display:block;margin-top:7px;font-size:24px;color:var(--lime)}.compare-history{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}.compare-history h3{margin:0 0 10px;font-size:15px}.compare-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.compare-row:last-child{border-bottom:0}.compare-row span{color:var(--muted)}@media(max-width:700px){.status-week{align-items:flex-start}.week{gap:5px}.day{min-height:106px;padding:12px 1px}.day .day-date{font-size:9px}.day .day-label{font-size:12px}.day b{font-size:8.5px}.compare-select-head{align-items:flex-start}.compare-stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <main class="app">
+    <header class="top"><div class="brand">↟ 사이타마 운동법</div><div style="display:flex;align-items:center;gap:10px"><button id="install-app" class="secondary" type="button" hidden style="padding:8px 10px;font-size:11px">앱 설치</button><span class="online">구글 시트 저장</span></div></header>
+    <div id="toast" class="toast" hidden></div>
+
+    <section id="record" class="page active">
+      <div><p class="eyebrow">BODYWEIGHT ROUTINE</p><h1 class="title">이번 운동 기록</h1><p class="hint">나눠서 운동해도, 같은 날짜의 목표에 누적됩니다.</p></div>
+      <section class="card"><p class="eyebrow">1. EXERCISE SELECT</p><div class="section-head"><h2>운동 종목 선택</h2><button id="exercise-settings" class="mini-button" type="button">이름 수정</button></div><div class="chips" id="chips"></div></section>
+      <section class="card"><p class="eyebrow">2. PERFORMANCE</p><h2>수행 기록</h2><div class="entries" id="entries"></div></section>
+      <section class="card"><p class="eyebrow">3. SAVE SESSION</p><label class="date-label">운동 날짜·시간<input id="performedAt" type="datetime-local"></label><div style="height:14px"></div><button class="primary wide" id="save">이번 운동 저장</button></section>
+    </section>
+
+    <section id="home" class="page"></section>
+    <section id="compare" class="page"></section>
+    <section id="journal" class="page"></section>
+  </main>
+
+  <nav class="tabs" aria-label="메뉴"><button data-page="record" class="active">✚<br>기록</button><button data-page="home">▦<br>현황</button><button data-page="compare">↗<br>비교</button><button data-page="journal">☷<br>일지</button></nav>
+
+<div id="exercise-settings-modal" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exercise-settings-title">
+    <h2 id="exercise-settings-title" class="modal-title">운동 종목 이름 수정</h2>
+    <p class="modal-hint">이름을 바꾸면 기존 운동 일지의 종목명도 함께 변경됩니다. 달리기 항목은 이름을 바꿔도 거리(km)와 10km 목표가 유지됩니다.</p>
+    <div id="exercise-name-list" class="name-list"></div>
+    <div class="modal-actions"><button id="exercise-settings-cancel" class="secondary" type="button">취소</button><button id="exercise-settings-save" class="primary" type="button">저장</button></div>
+  </div>
+</div>
+
+<script src="./config.js"></script>
+<script>
+  const defaultExerciseDefs=[
+    {id:'pushup',name:'팔굽혀펴기',type:'reps',goal:100},
+    {id:'situp',name:'윗몸일으키기',type:'reps',goal:100},
+    {id:'squat',name:'스쿼트',type:'reps',goal:100},
+    {id:'running',name:'달리기',type:'distance',goal:10},
+  ];
+  let exerciseDefs=defaultExerciseDefs.map(item=>({...item}));
+  let exercises=exerciseDefs.map(item=>item.name);
+  const labels=['월','화','수','목','금','토','일'];
+  let compareExercise=exercises[0];
+  let data={workouts:[],summary:null,settings:null};
+  let selected=new Set(exercises);
+  // 종목을 빼거나 다시 추가해도 사용자가 입력한 횟수/세트/거리를 유지합니다.
+  let recordInputs=Object.fromEntries(exerciseDefs.map(item=>[item.name,{reps:item.type==='distance'?1:20,sets:1}]));
+  let loading=false;
+  let saving=false;
+  let exerciseSettingsOpen=false;
+  let lastSuccessfulLoadAt=0;
+
+  const byId=id=>document.getElementById(id);
+
+  // 서버에서 날짜를 항상 yyyy-MM-dd HH:mm:ss로 보내더라도
+  // 혹시 다른 형식이 들어왔을 때 날짜 키만 안전하게 추출합니다.
+  const dateKey=value=>String(value||'').replace('T',' ').slice(0,10);
+  const localDateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const formatMonthDay=key=>{const [y,m,d]=String(key).split('-').map(Number);return `${m}/${d}`};
+  const weekdayLabel=key=>{const [y,m,d]=String(key).split('-').map(Number);return labels[(new Date(y,m-1,d).getDay()+6)%7]};
+  const exerciseDef=name=>exerciseDefs.find(item=>item.name===name) || defaultExerciseDefs.find(item=>item.name===name) || defaultExerciseDefs[0];
+  const goal=name=>Number(exerciseDef(name)?.goal || 100);
+  const unit=name=>exerciseDef(name)?.type==='distance'?'km':'회';
+  const isDistance=name=>exerciseDef(name)?.type==='distance';
+  const amount=item=>Number(item.reps)*(isDistance(item.exercise)?1:Number(item.sets||1));
+  const defaultInputsFor=name=>({reps:isDistance(name)?1:20,sets:1});
+
+  const localInput=()=>{
+    const d=new Date();
+    d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+    return d.toISOString().slice(0,16);
+  };
+
+  const parseLocalDate=value=>{
+    const text=String(value||'').replace(' ','T');
+    const d=new Date(text);
+    return Number.isNaN(d.getTime())?null:d;
+  };
+
+  const displayDate=value=>{
+    const d=parseLocalDate(value);
+    return d?d.toLocaleString('ko-KR') : String(value||'');
+  };
+
+  const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+
+  function toast(message){
+    const el=byId('toast');
+    el.textContent=message;
+    el.hidden=false;
+    clearTimeout(window.toastTimer);
+    window.toastTimer=setTimeout(()=>el.hidden=true,3500);
+  }
+
+  // GitHub Pages ↔ Apps Script 통신은 CORS 영향을 받지 않도록 JSONP를 사용합니다.
+  // 저장/삭제도 Apps Script doGet에서 처리하므로 별도 서버 비용이 필요하지 않습니다.
+  const API_URL = window.SAITAMA_API_URL || '';
+  const jsonpCallbacks = new Map();
+  let jsonpSeq = 0;
+
+  function api(name,...args){
+    return new Promise((resolve,reject)=>{
+      if(!API_URL || API_URL.includes('PASTE_')){
+        reject(new Error('Apps Script API 주소가 설정되지 않았어요. config.js의 API_URL을 확인해 주세요.'));
+        return;
+      }
+
+      const callbackName=`__saitama_jsonp_${Date.now()}_${++jsonpSeq}`;
+      const script=document.createElement('script');
+      const cleanup=()=>{
+        jsonpCallbacks.delete(callbackName);
+        script.remove();
+        clearTimeout(timer);
+        try{ delete window[callbackName]; }catch(_){ window[callbackName]=undefined; }
+      };
+      const timer=setTimeout(()=>{
+        cleanup();
+        reject(new Error('서버 응답 시간이 초과됐어요. 인터넷 연결을 확인해 주세요.'));
+      },20000);
+
+      window[callbackName]=(response)=>{
+        cleanup();
+        if(response?.ok){
+          resolve(response.data);
+        }else{
+          reject(new Error(response?.error?.message||'요청을 처리하지 못했어요.'));
+        }
+      };
+      jsonpCallbacks.set(callbackName,true);
+
+      const url=new URL(API_URL);
+      url.searchParams.set('action',name);
+      url.searchParams.set('callback',callbackName);
+      url.searchParams.set('_',String(Date.now()));
+
+      if(name==='deleteWorkout'){
+        url.searchParams.set('id',String(args[0]||''));
+      }else if(args.length){
+        url.searchParams.set('payload',JSON.stringify(args[0]));
+      }
+
+      script.async=true;
+      script.src=url.toString();
+      script.onerror=()=>{
+        cleanup();
+        reject(new Error('서버에 연결하지 못했어요. Apps Script 배포 URL과 접근 권한을 확인해 주세요.'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+
+  // 동일한 저장 요청이 네트워크 오류로 재시도되어도 같은 ID를 사용하도록 합니다.
+  function getPendingSaveId(signature){
+    try{
+      const oldSignature=sessionStorage.getItem('pendingSaveSignature');
+      let id=sessionStorage.getItem('pendingSaveId');
+
+      if(!id || oldSignature!==signature){
+        id=(crypto.randomUUID?crypto.randomUUID():'w_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+        sessionStorage.setItem('pendingSaveId',id);
+        sessionStorage.setItem('pendingSaveSignature',signature);
+      }
+
+      return id;
+    }catch(_){
+      return (crypto.randomUUID?crypto.randomUUID():'w_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+    }
+  }
+
+  function clearPendingSaveId(){
+    try{
+      sessionStorage.removeItem('pendingSaveId');
+      sessionStorage.removeItem('pendingSaveSignature');
+    }catch(_){ }
+  }
+
+  function applyExerciseSettings(){
+    const incoming=Array.isArray(data.settings?.exercises)?data.settings.exercises:null;
+    if(!incoming || incoming.length!==defaultExerciseDefs.length)return;
+
+    const next=incoming.map((item,index)=>({
+      id:String(item.id||defaultExerciseDefs[index].id),
+      name:String(item.name||defaultExerciseDefs[index].name).trim(),
+      type:item.type==='distance'?'distance':'reps',
+      goal:Number(item.goal)||defaultExerciseDefs[index].goal,
+    }));
+    if(next.some(item=>!item.name))return;
+
+    const oldDefs=exerciseDefs;
+    const oldSelected=new Set(selected);
+    const oldInputs={...recordInputs};
+    exerciseDefs=next;
+    exercises=exerciseDefs.map(item=>item.name);
+
+    recordInputs=Object.fromEntries(exerciseDefs.map((item,index)=>{
+      const oldName=oldDefs[index]?.name;
+      return [item.name,(oldName&&oldInputs[oldName])||defaultInputsFor(item.name)];
+    }));
+
+    selected=new Set(exerciseDefs.map((item,index)=>{
+      const oldName=oldDefs[index]?.name;
+      return oldSelected.has(oldName)?item.name:null;
+    }).filter(Boolean));
+    if(!selected.size)selected=new Set(exercises);
+    if(!exercises.includes(compareExercise))compareExercise=exercises[0];
+  }
+
+  async function load(options={}){
+    const silent=Boolean(options.silent);
+    if(loading)return false;
+    loading=true;
+    try{
+      data=await api('getInitialData');
+      applyExerciseSettings();
+      lastSuccessfulLoadAt=Date.now();
+      try{localStorage.setItem('saitama-pwa-data-v1',JSON.stringify(data));}catch(_){ }
+      renderAll();
+      return true;
+    }catch(error){
+      if(silent)return false;
+      try{
+        const cached=localStorage.getItem('saitama-pwa-data-v1');
+        if(cached){
+          data=JSON.parse(cached);
+          applyExerciseSettings();
+          renderAll();
+          toast('인터넷 연결이 없어 마지막으로 불러온 기록을 표시했어요.');
+        }else{
+          toast(error.message);
+        }
+      }catch(_){
+        toast(error.message);
+      }
+      return false;
+    }finally{
+      loading=false;
+    }
+  }
+
+  function dayTotals(day){
+    const totals=Object.fromEntries(exercises.map(name=>[name,0]));
+
+    data.workouts
+      .filter(w=>dateKey(w.performed_at)===day)
+      .forEach(w=>w.sets.forEach(s=>{
+        if(totals[s.exercise]!==undefined){
+          totals[s.exercise]+=amount(s);
+        }
+      }));
+
+    return totals;
+  }
+
+  function captureRecordInputs(){
+    document.querySelectorAll('#entries input[data-name]').forEach(input=>{
+      const name=input.dataset.name;
+      if(!recordInputs[name])recordInputs[name]=defaultInputsFor(name);
+      if(input.dataset.key==='reps')recordInputs[name].reps=input.value;
+      if(input.dataset.key==='sets')recordInputs[name].sets=input.value;
+    });
+  }
+
+  function openExerciseSettings(){
+    const modal=byId('exercise-settings-modal');
+    const list=byId('exercise-name-list');
+    list.innerHTML=exerciseDefs.map((item,index)=>`<label>${index+1}. ${isDistance(item.name)?'거리 종목':'횟수 종목'}<input data-exercise-name-input="${esc(item.name)}" value="${esc(item.name)}" maxlength="30" autocomplete="off"></label>`).join('');
+    modal.hidden=false;
+    exerciseSettingsOpen=true;
+    setTimeout(()=>list.querySelector('input')?.focus(),0);
+  }
+
+  function closeExerciseSettings(){
+    byId('exercise-settings-modal').hidden=true;
+    exerciseSettingsOpen=false;
+  }
+
+  async function saveExerciseSettings(){
+    if(saving)return;
+    const inputs=[...document.querySelectorAll('[data-exercise-name-input]')];
+    const names=inputs.map(input=>input.value.trim());
+    if(names.some(name=>!name))return toast('운동 종목 이름을 모두 입력해 주세요.');
+    if(new Set(names).size!==names.length)return toast('운동 종목 이름은 서로 다르게 입력해 주세요.');
+    if(names.some(name=>name.length>30))return toast('운동 종목 이름은 30자 이내로 입력해 주세요.');
+    if(!confirm('기존 운동 일지의 종목명도 함께 변경할까요?'))return;
+
+    const button=byId('exercise-settings-save');
+    button.disabled=true;
+    button.textContent='저장 중...';
+    try{
+      await api('updateExerciseNames',{names});
+      closeExerciseSettings();
+      await load({silent:true});
+      toast('운동 종목 이름을 변경했어요.');
+    }catch(error){
+      toast(error.message);
+    }finally{
+      button.disabled=false;
+      button.textContent='저장';
+    }
+  }
+
+  function renderRecord(){
+    const today=dateKey(byId('performedAt').value||localInput());
+    const totals=dayTotals(today);
+
+    // 현재 입력값을 먼저 보존한 뒤 화면을 다시 그립니다.
+    captureRecordInputs();
+
+    byId('chips').innerHTML=exercises.map(name=>`<button class="chip ${selected.has(name)?'on':''}" data-exercise="${esc(name)}">${selected.has(name)?'✓ ':''}${esc(name)}</button>`).join('');
+
+    byId('entries').innerHTML=exercises.filter(name=>selected.has(name)).map(name=>{
+      const running=isDistance(name);
+      const saved=recordInputs[name]||{reps:running?1:20,sets:1};
+      const reps=Number(saved.reps)||0;
+      const sets=running?1:(Number(saved.sets)||0);
+      const initialAmount=reps*sets;
+      return `<article class="entry">
+        <div class="entry-top"><span>${esc(name)}</span><b>목표 ${goal(name)}${unit(name)}</b></div>
+        <div class="fields ${running?'run':''}">
+          <label>${running?'거리':'횟수'}<input data-name="${esc(name)}" data-key="reps" type="number" min="1" step="${running?'0.1':'1'}" value="${esc(saved.reps)}"></label>
+          ${running?'':`<label>세트 수<input data-name="${esc(name)}" data-key="sets" type="number" min="1" step="1" value="${esc(saved.sets)}"></label>`}
+        </div>
+        <p class="remaining">오늘 누적 ${totals[name]}${unit(name)} · 이번 기록 후 <b data-left="${esc(name)}">${Math.max(0,goal(name)-totals[name]-initialAmount)}${unit(name)} 남음</b></p>
+      </article>`;
+    }).join('');
+
+    document.querySelectorAll('#chips button').forEach(button=>button.onclick=()=>{
+      if(saving) return;
+      // 종목을 추가/제거하기 전에 현재 입력값을 저장합니다.
+      captureRecordInputs();
+      const name=button.dataset.exercise;
+      if(selected.has(name)){
+        if(selected.size===1)return toast('운동 종목을 하나 이상 선택해 주세요.');
+        selected.delete(name);
+      }else{
+        selected.add(name);
+      }
+      renderRecord();
+    });
+
+    document.querySelectorAll('#entries input').forEach(input=>{
+      input.oninput=()=>{
+        const name=input.dataset.name;
+        if(!recordInputs[name])recordInputs[name]=defaultInputsFor(name);
+        if(input.dataset.key==='reps')recordInputs[name].reps=input.value;
+        if(input.dataset.key==='sets')recordInputs[name].sets=input.value;
+        updateRemaining();
+      };
+    });
+  }
+
+  function updateRemaining(){
+    const today=dateKey(byId('performedAt').value||localInput());
+    const totals=dayTotals(today);
+
+    exercises.forEach(name=>{
+      const el=document.querySelector(`[data-left="${CSS.escape(name)}"]`);
+      if(!el)return;
+
+      const reps=Number(document.querySelector(`[data-name="${CSS.escape(name)}"][data-key="reps"]`)?.value||0);
+      const sets=isDistance(name)?1:Number(document.querySelector(`[data-name="${CSS.escape(name)}"][data-key="sets"]`)?.value||0);
+      const left=Math.max(0,goal(name)-totals[name]-reps*sets);
+      el.textContent=left+unit(name)+' 남음';
+    });
+  }
+
+  async function save(){
+    if(saving)return;
+
+    const performed_at=byId('performedAt').value;
+    const sets=[...selected].map(exercise=>({
+      exercise,
+      reps:Number(document.querySelector(`[data-name="${CSS.escape(exercise)}"][data-key="reps"]`)?.value||0),
+      sets:isDistance(exercise)?1:Number(document.querySelector(`[data-name="${CSS.escape(exercise)}"][data-key="sets"]`)?.value||0)
+    }));
+
+    if(!performed_at||sets.some(s=>!s.reps||!s.sets||s.reps<0||s.sets<0)){
+      return toast('날짜와 수행량을 확인해 주세요.');
+    }
+
+    // 같은 입력값으로 재시도하면 같은 ID를 사용합니다.
+    const signature=JSON.stringify({performed_at,sets});
+    const id=getPendingSaveId(signature);
+    const button=byId('save');
+
+    saving=true;
+    button.disabled=true;
+    button.textContent='저장 중...';
+
+    try{
+      await api('saveWorkout',{id,performed_at,sets});
+      clearPendingSaveId();
+      await load({silent:true});
+      toast('운동 기록을 구글 시트에 저장했어요.');
+      show('home');
+    }catch(error){
+      // 실패하면 pendingSaveId를 유지합니다.
+      // 사용자가 다시 저장해도 동일 ID로 재시도되어 중복 기록을 막습니다.
+      toast(error.message);
+    }finally{
+      saving=false;
+      button.disabled=false;
+      button.textContent='이번 운동 저장';
+    }
+  }
+
+  function renderHome(){
+    const s=data.summary;
+    if(!s)return;
+
+    const monday=new Date(`${s.week_start}T00:00:00`);
+    const recordsByDay=Object.fromEntries(labels.map((_,i)=>{
+      const d=new Date(monday);
+      d.setDate(d.getDate()+i);
+      return [localDateKey(d),[]];
+    }));
+
+    data.workouts.forEach(w=>{
+      const key=dateKey(w.performed_at);
+      if(recordsByDay[key])recordsByDay[key].push(w);
+    });
+
+    const today=dateKey(localInput());
+    const totals=dayTotals(today);
+
+    byId('home').innerHTML=`
+      <section class="card hero"><div><p class="eyebrow">이번 주 실제 기록</p><strong>${s.current.count}<small> / 7일</small></strong><p>저장한 운동 날짜만 반영돼요.</p></div><div class="ring">${Math.round(s.current.count/7*100)}%</div></section>
+      <section class="card"><p class="eyebrow">WEEKLY RECORD</p><div class="status-week"><h2>이번 주 운동 기록</h2><span class="week-start">${esc(s.week_start)} 시작</span></div><div class="week">${labels.map((label,i)=>{
+        const d=new Date(monday);
+        d.setDate(d.getDate()+i);
+        const key=localDateKey(d);
+        const count=new Set(recordsByDay[key].flatMap(w=>w.sets.map(x=>x.exercise))).size;
+        const selectedClass=key===today?'selected':'';
+        const todayClass=key===today?'today':'';
+        return `<button class="day ${count?'done':''} ${selectedClass} ${todayClass}" data-day="${key}"><span class="day-date">${formatMonthDay(key)}</span><span class="day-label">${label}</span><b>${count?count+'종목':'기록 없음'}</b></button>`;
+      }).join('')}</div><div id="day-detail" class="hint" style="margin-top:14px">날짜를 누르면 그날의 종목별 누적 수행량을 확인할 수 있어요.</div></section>
+      <section class="card"><p class="eyebrow">TODAY'S REMAINING GOAL</p><h2>오늘 남은 목표</h2><div class="grid4">${exercises.map(name=>`<article class="metric"><span>${esc(name)}</span><b>${totals[name]}<small>/ ${goal(name)}${unit(name)}</small></b><span>${Math.max(0,goal(name)-totals[name])}${unit(name)} 남음</span></article>`).join('')}</div></section>`;
+
+    document.querySelectorAll('[data-day]').forEach(button=>button.onclick=()=>{
+      const key=button.dataset.day;
+      const totals=dayTotals(key);
+      byId('day-detail').innerHTML=`<div><b>${formatMonthDay(key)} (${weekdayLabel(key)}) 기록</b><br>${exercises.map(name=>`${esc(name)} ${totals[name]}${unit(name)}`).join(' · ')}</div>`;
+      document.querySelectorAll('[data-day]').forEach(el=>el.classList.toggle('selected',el===button));
+    });
+  }
+
+  function renderCompare(){
+    const name=compareExercise;
+    const history=data.workouts
+      .flatMap(w=>w.sets.filter(s=>s.exercise===name).map(s=>({...s,performed_at:w.performed_at})))
+      .sort((a,b)=>String(b.performed_at).localeCompare(String(a.performed_at)));
+
+    const amounts=history.map(amount);
+    const latest=amounts[0];
+    const previous=amounts[1];
+    const avg=amounts.length?Math.round(amounts.reduce((a,b)=>a+b,0)/amounts.length):0;
+    const max=amounts.length?Math.max(...amounts):0;
+    const trend=previous===undefined?'첫 기록':(latest-previous>0?'▲ +':'▼ ')+(latest-previous)+unit(name);
+
+    let detail='';
+    if(!history.length){
+      detail=`<section class="compare-empty"><p>${esc(name)} 기록이 아직 없어요.</p><a class="compare-start" href="#" data-start-record>첫 기록 시작하기</a></section>`;
+    }else{
+      detail=`<section class="compare-detail"><div class="compare-stats"><article class="compare-stat"><span>최신 기록</span><b>${latest}${unit(name)}</b></article><article class="compare-stat"><span>최고 기록</span><b>${max}${unit(name)}</b></article><article class="compare-stat"><span>평균 기록</span><b>${avg}${unit(name)}</b></article></div><section class="compare-history"><h3>최근 ${Math.min(history.length,7)}회 기록</h3>${history.slice(0,7).map(item=>`<div class="compare-row"><span>${esc(displayDate(item.performed_at))}</span><b>${amount(item)}${unit(name)}</b></div>`).join('')}<p class="hint" style="margin:12px 0 0">직전 대비 ${trend}</p></section></section>`;
+    }
+
+    byId('compare').innerHTML=`<div><p class="eyebrow">PROGRESS OVERVIEW</p><h1 class="title">기록 비교</h1><p class="hint">종목을 선택하면 최근 흐름과 저장한 기록을 함께 볼 수 있어요.</p></div><section class="compare-select"><div class="compare-select-head"><div><p class="eyebrow">COMPARE BY EXERCISE</p><h2 class="compare-select-title">비교할 종목 선택</h2></div><span class="compare-period">최근 7회 기준</span></div><div class="compare-chips">${exercises.map(ex=>`<button class="compare-chip ${compareExercise===ex?'on':''}" data-compare-exercise="${esc(ex)}">${esc(ex)}</button>`).join('')}</div></section>${detail}`;
+
+    document.querySelectorAll('[data-compare-exercise]').forEach(button=>button.onclick=()=>{compareExercise=button.dataset.compareExercise;renderCompare()});
+    const starter=byId('compare').querySelector('[data-start-record]');
+    if(starter)starter.onclick=e=>{e.preventDefault();show('record')};
+  }
+
+  function renderJournal(){
+    byId('journal').innerHTML=`<div><p class="eyebrow">ARCHIVE</p><h1 class="title">운동 일지</h1><p class="hint">날짜별로 저장한 운동 기록을 확인하고 삭제할 수 있어요.</p></div><section class="card"><p class="eyebrow">GOOGLE SHEETS STORAGE</p><h2>구글 시트에 저장 중</h2><p class="hint">이 앱의 기록은 연결된 구글 스프레드시트의 운동기록·수행기록 시트에 저장됩니다.</p></section><section class="card"><h2>날짜별 운동 일지</h2>${data.workouts.length?data.workouts.map(w=>`<article class="session"><div><b>${esc(displayDate(w.performed_at))}</b><span>${w.sets.map(s=>`${esc(s.exercise)} ${amount(s)}${unit(s.exercise)}${isDistance(s.exercise)?'':` (${s.reps}회 × ${s.sets}세트)`}`).join(' · ')}</span></div><div class="session-actions"><button class="danger" data-delete="${esc(w.id)}">삭제</button></div></article>`).join(''):'<p class="empty">저장된 운동 기록이 없어요.</p>'}</section>`;
+
+    document.querySelectorAll('[data-delete]').forEach(button=>button.onclick=async()=>{
+      if(saving)return;
+      if(!confirm('이 운동 기록을 삭제할까요?'))return;
+
+      const id=button.dataset.delete;
+      button.disabled=true;
+
+      try{
+        await api('deleteWorkout',id);
+        await load({silent:true});
+        toast('운동 기록을 삭제했어요.');
+      }catch(error){
+        button.disabled=false;
+        toast(error.message);
+      }
+    });
+  }
+
+  function renderAll(){
+    renderRecord();
+    renderHome();
+    renderCompare();
+    renderJournal();
+  }
+
+  function show(name){
+    document.querySelectorAll('.page').forEach(page=>page.classList.toggle('active',page.id===name));
+    document.querySelectorAll('.tabs button').forEach(button=>button.classList.toggle('active',button.dataset.page===name));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  document.querySelectorAll('.tabs button').forEach(button=>button.onclick=()=>show(button.dataset.page));
+  byId('performedAt').value=localInput();
+  byId('performedAt').onchange=()=>{renderRecord();updateRemaining()};
+  byId('save').onclick=save;
+
+  // Chrome/Edge 계열에서는 설치 프롬프트를 직접 띄울 수 있습니다.
+  let deferredInstallPrompt=null;
+  const installButton=byId('install-app');
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault();
+    deferredInstallPrompt=event;
+    installButton.hidden=false;
+  });
+  installButton.onclick=async()=>{
+    if(!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    try{ await deferredInstallPrompt.userChoice; }catch(_){ }
+    deferredInstallPrompt=null;
+    installButton.hidden=true;
+  };
+  window.addEventListener('appinstalled',()=>{
+    deferredInstallPrompt=null;
+    installButton.hidden=true;
+    toast('앱이 설치됐어요. 홈 화면에서 실행할 수 있어요.');
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('./sw.js').catch(()=>{ });
+    });
+  }
+
+  const AUTO_REFRESH_MS=5*60*1000;
+  const RESUME_REFRESH_MS=60*1000;
+
+  async function autoRefresh(){
+    if(document.visibilityState!=='visible' || saving || exerciseSettingsOpen)return;
+    await load({silent:true});
+  }
+
+  byId('exercise-settings').onclick=openExerciseSettings;
+  byId('exercise-settings-cancel').onclick=closeExerciseSettings;
+  byId('exercise-settings-save').onclick=saveExerciseSettings;
+  byId('exercise-settings-modal').addEventListener('click',event=>{
+    if(event.target===event.currentTarget)closeExerciseSettings();
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape' && exerciseSettingsOpen)closeExerciseSettings();
+  });
+
+  // 5분마다 최신 기록을 확인하고, 앱을 다시 열었을 때도 최신 상태를 확인합니다.
+  setInterval(autoRefresh,AUTO_REFRESH_MS);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible' && Date.now()-lastSuccessfulLoadAt>RESUME_REFRESH_MS){
+      autoRefresh();
+    }
+  });
+
+  load();
+</script>
+</body>
+</html>
