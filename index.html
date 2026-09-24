@@ -526,9 +526,14 @@
 
   function renderCalendarDetail(key){
     const records=data.workouts.filter(w=>dateKey(w.performed_at)===key);
+    const totalsByExercise=new Map();
+    records.forEach(workout=>workout.sets.forEach(set=>{
+      const name=set.exercise;
+      totalsByExercise.set(name,(totalsByExercise.get(name)||0)+amount(set));
+    }));
     const [year,month,day]=key.split('-').map(Number);
     const label=new Date(year,month-1,day).toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-    byId('calendar-detail').innerHTML=`<h3>${esc(label)}</h3>${records.length?`<div class="calendar-record-list">${records.map(w=>`<div class="calendar-record-item">${w.sets.map(s=>`<span>✓ ${esc(s.exercise)} ${amount(s)}${unit(s.exercise)}</span>`).join('')}</div>`).join('')}</div>`:'<p>이 날짜에는 저장된 운동 기록이 없어요.</p>'}`;
+    byId('calendar-detail').innerHTML=`<h3>${esc(label)}</h3>${totalsByExercise.size?`<div class="calendar-record-list"><div class="calendar-record-item">${Array.from(totalsByExercise,([name,total])=>`<span>✓ ${esc(name)} ${total}${unit(name)}</span>`).join('')}</div></div>`:'<p>이 날짜에는 저장된 운동 기록이 없어요.</p>'}`;
   }
 
   function renderCompare(){
